@@ -51,7 +51,7 @@ public class VinylController {
 
     @PutMapping()
     public ResponseEntity<Void> replace(@RequestBody Vinyl vinyl) {
-        log.info("Replace vinyl by id '{}'", vinyl.getId());
+            log.info("Replace id '{}' vinyl ", vinyl.getId());
         vinylService.replace(vinyl);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
