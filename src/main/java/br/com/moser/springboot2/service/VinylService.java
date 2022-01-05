@@ -1,6 +1,7 @@
 package br.com.moser.springboot2.service;
 
 import br.com.moser.springboot2.domain.Vinyl;
+import br.com.moser.springboot2.mapper.VinylMapper;
 import br.com.moser.springboot2.reposiitory.VinylRepository;
 import br.com.moser.springboot2.requests.VinylPostRequestBody;
 import br.com.moser.springboot2.requests.VinylPutRequestBody;
@@ -35,7 +36,7 @@ public class VinylService {
 
     public Vinyl save(VinylPostRequestBody vinylPostRequestBody) {
         log.info("Saving a new vinyl");
-        return vinylRepository.save(Vinyl.builder().name(vinylPostRequestBody.getName()).build());
+        return vinylRepository.save(VinylMapper.INSTANCE.toVinyl(vinylPostRequestBody));
     }
 
     public void delete(long id) {
@@ -45,11 +46,9 @@ public class VinylService {
 
     public void replace(VinylPutRequestBody vinylPutRequestBody) {
         Vinyl savedVinyl = findByIdOrThrowBadRequestException(vinylPutRequestBody.getId());
-        log.info("Replacing vinyl ID '{}' ", savedVinyl.getId());
-        Vinyl vinyl = Vinyl.builder()
-                .id(savedVinyl.getId())
-                .name(vinylPutRequestBody.getName())
-                .build();
+        log.info("Replacing vinyl by ID '{}' ", savedVinyl.getId());
+        Vinyl vinyl = VinylMapper.INSTANCE.toVinyl(vinylPutRequestBody);
+        vinyl.setId(savedVinyl.getId());
         vinylRepository.save(vinyl);
     }
 }
