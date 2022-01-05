@@ -1,6 +1,8 @@
 package br.com.moser.springboot2.controller;
 
 import br.com.moser.springboot2.domain.Vinyl;
+import br.com.moser.springboot2.requests.VinylPostRequestBody;
+import br.com.moser.springboot2.requests.VinylPutRequestBody;
 import br.com.moser.springboot2.service.VinylService;
 import br.com.moser.springboot2.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,33 +28,29 @@ public class VinylController {
 
     @GetMapping
     public ResponseEntity<List<Vinyl>> list() {
-        log.info("Listing all vinyl's '{}'", dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(vinylService.listAll());
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Vinyl> findById(@PathVariable long id) {
-        log.info("Retrieve vinyl by id '{}'", id);
-        return ResponseEntity.ok(vinylService.findById(id));
+        return ResponseEntity.ok(vinylService.findByIdOrThrowBadRequestException(id));
     }
 
     @PostMapping
-    public ResponseEntity<Vinyl> save(@RequestBody Vinyl vinyl) {
-        log.info("Saving a new vinyl");
-        return new ResponseEntity<>(vinylService.save(vinyl), HttpStatus.CREATED);
+    public ResponseEntity<Vinyl> save(@RequestBody VinylPostRequestBody vinylPostRequestBody) {
+        return new ResponseEntity<>(vinylService.save(vinylPostRequestBody), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        log.info("Deleting vinyl by id '{}'", id);
         vinylService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping()
-    public ResponseEntity<Void> replace(@RequestBody Vinyl vinyl) {
-            log.info("Replace id '{}' vinyl ", vinyl.getId());
-        vinylService.replace(vinyl);
+    public ResponseEntity<Void> replace(@RequestBody VinylPutRequestBody vinylPutRequestBody) {
+        vinylService.replace(vinylPutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

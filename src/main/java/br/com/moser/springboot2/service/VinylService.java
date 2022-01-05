@@ -1,53 +1,55 @@
 package br.com.moser.springboot2.service;
 
 import br.com.moser.springboot2.domain.Vinyl;
+import br.com.moser.springboot2.reposiitory.VinylRepository;
+import br.com.moser.springboot2.requests.VinylPostRequestBody;
+import br.com.moser.springboot2.requests.VinylPutRequestBody;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Juliano Moser
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class VinylService {
 
-    private static List<Vinyl> vinyls;
-
-    static {
-        vinyls = new ArrayList<>(List.of(new Vinyl(1L, "Intervals"), new Vinyl(2L, "Plini")));
-    }
-
-    // private final VinylRepository vinylRepository;
+    private final VinylRepository vinylRepository;
 
     public List<Vinyl> listAll() {
-        return vinyls;
+        log.info("Listing all vinyl's");
+        return vinylRepository.findAll();
     }
 
-    public Vinyl findById(long id) {
-        return vinyls.stream()
-                .filter(vinyl -> vinyl.getId().equals(id))
-                .findFirst()
+    public Vinyl findByIdOrThrowBadRequestException(long id) {
+        log.info("Retrieve vinyl by ID '{}'", id);
+        return vinylRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vinyl not Found"));
     }
 
-    public Vinyl save(Vinyl vinyl) {
-        vinyl.setId(ThreadLocalRandom.current().nextLong(3, 100000));
-        vinyls.add(vinyl);
-        return vinyl;
+    public Vinyl save(VinylPostRequestBody vinylPostRequestBody) {
+        log.info("Saving a new vinyl");
+        return vinylRepository.save(Vinyl.builder().name(vinylPostRequestBody.getName()).build());
     }
 
     public void delete(long id) {
-        vinyls.remove(findById(id));
+        log.info("Deleting vinyl by ID '{}'", id);
+        vinylRepository.delete(findByIdOrThrowBadRequestException(id));
     }
 
-    public void replace(Vinyl vinyl) {
-        delete(vinyl.getId());
-        vinyls.add(vinyl);
+    public void replace(VinylPutRequestBody vinylPutRequestBody) {
+        Vinyl savedVinyl = findByIdOrThrowBadRequestException(vinylPutRequestBody.getId());
+        log.info("Replacing vinyl ID '{}' ", savedVinyl.getId());
+        Vinyl vinyl = Vinyl.builder()
+                .id(savedVinyl.getId())
+                .name(vinylPutRequestBody.getName())
+                .build();
+        vinylRepository.save(vinyl);
     }
 }
