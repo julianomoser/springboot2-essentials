@@ -11,4 +11,6 @@ import java.util.List;
  */
 @Repository
 public interface VinylRepository extends JpaRepository<Vinyl, Long> {
+
+    List<Vinyl> findByName(String name);
 }

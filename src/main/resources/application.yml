@@ -3,7 +3,7 @@ server:
     include-stacktrace: on_param
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/vinyl?allowPublicKeyRetrievel=true&sslMode=DISABLED&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/vinyl?createDatabaseIfNotExist=true
     username: root
     password: moser
   jpa:

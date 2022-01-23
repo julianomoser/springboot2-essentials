@@ -37,6 +37,11 @@ public class VinylController {
         return ResponseEntity.ok(vinylService.findByIdOrThrowBadRequestException(id));
     }
 
+    @GetMapping(path = "/find")
+    public ResponseEntity<List<Vinyl>> findByName(@RequestParam String name) {
+        return ResponseEntity.ok(vinylService.findByName(name));
+    }
+
     @PostMapping
     public ResponseEntity<Vinyl> save(@RequestBody VinylPostRequestBody vinylPostRequestBody) {
         return new ResponseEntity<>(vinylService.save(vinylPostRequestBody), HttpStatus.CREATED);
