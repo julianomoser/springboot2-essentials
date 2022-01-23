@@ -1,5 +1,20 @@
-package br.com.moser.springboot2.exception;/**
+package br.com.moser.springboot2.exception;
+
+import lombok.Builder;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+/**
  * @author Juliano Moser
  */
- public class BadRequestExceptionDetails {
+@Data
+@Builder
+public class BadRequestExceptionDetails {
+
+    private String title;
+    private int status;
+    private String details;
+    private String developerMessage;
+    private LocalDateTime timestamp;
 }
