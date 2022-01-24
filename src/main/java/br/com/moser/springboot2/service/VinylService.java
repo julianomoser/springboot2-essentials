@@ -8,6 +8,8 @@ import br.com.moser.springboot2.requests.VinylPostRequestBody;
 import br.com.moser.springboot2.requests.VinylPutRequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +27,8 @@ public class VinylService {
 
     private final VinylRepository vinylRepository;
 
-    public List<Vinyl> listAll() {
-        return vinylRepository.findAll();
+    public Page<Vinyl> listAll(Pageable pageable) {
+        return vinylRepository.findAll(pageable);
     }
 
     public List<Vinyl> findByName(String name) {
