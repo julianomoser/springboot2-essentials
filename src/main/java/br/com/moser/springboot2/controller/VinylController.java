@@ -35,6 +35,12 @@ public class VinylController {
         return ResponseEntity.ok(vinylService.listAll(pageable));
     }
 
+    @GetMapping(path = "/all")
+    public ResponseEntity<List<Vinyl>> listAll() {
+        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+        return ResponseEntity.ok(vinylService.listAllNonPageable());
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<Vinyl> findById(@PathVariable long id) {
         return ResponseEntity.ok(vinylService.findByIdOrThrowBadRequestException(id));

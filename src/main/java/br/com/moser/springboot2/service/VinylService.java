@@ -31,6 +31,10 @@ public class VinylService {
         return vinylRepository.findAll(pageable);
     }
 
+    public List<Vinyl> listAllNonPageable() {
+        return vinylRepository.findAll();
+    }
+
     public List<Vinyl> findByName(String name) {
         return vinylRepository.findByName(name);
     }
